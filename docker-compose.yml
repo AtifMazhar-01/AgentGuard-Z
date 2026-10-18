@@ -1,0 +1,29 @@
+services:
+  monitor:
+    build: .
+    image: agentguard-z:local
+    env_file:
+      - .env
+    command:
+      - python
+      - -m
+      - agentguard.monitor
+    restart: unless-stopped
+    init: true
+
+  dashboard:
+    build: .
+    image: agentguard-z:local
+    env_file:
+      - .env
+    command:
+      - streamlit
+      - run
+      - dashboard.py
+      - --server.address=0.0.0.0
+      - --server.port=8501
+      - --server.headless=true
+    ports:
+      - "8501:8501"
+    restart: unless-stopped
+    init: true
